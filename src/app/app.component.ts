@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import {
   CellClickedEvent,
   ColDef,
+  ColumnApi,
   GridApi,
   GridReadyEvent,
 } from 'ag-grid-community';
@@ -19,30 +20,42 @@ export class AppComponent {
   columnDefs!: ColDef[];
   rowData!: any[];
   defaultColDef!: ColDef;
-  destroySubject: Subject<void> = new Subject<void>();
+  // destroySubject: Subject<void> = new Subject<void>();
   gridApi!: GridApi;
+  gridColumnApi!: ColumnApi;
   cellClickMessage: string = '';
 
   constructor(private http: HttpClient) {}
 
   ngOnInit(): void {
     this.columnDefs = [
-      { field: 'make', headerName: 'Vehicle Make' },
-      { field: 'model', headerName: 'Vehicle Model' },
-      { field: 'price', headerName: 'Onroad Price' },
+      {
+        colId: 'make',
+        field: 'make',
+        headerName: 'Vehicle Make',
+        filter: 'agTextColumnFilter',
+      },
+      { colId: 'model', field: 'model', headerName: 'Vehicle Model' },
+      {
+        field: 'price',
+        headerName: 'Onroad Price',
+        filter: 'agNumberColumnFilter',
+      },
     ];
     this.defaultColDef = {
       sortable: true,
-      filter: true,
     };
   }
 
   onGridReady(params: GridReadyEvent) {
     this.gridApi = params.api;
+    this.gridColumnApi = params.columnApi;
     this.http
-      .get<any[]>('https://www.ag-grid.com/example-assets/row-data.json')
+      .get<Array<{ [key: string]: string | number }>>(
+        'https://www.ag-grid.com/example-assets/row-data.json'
+      )
       .subscribe({
-        next: (data) => {
+        next: (data: Array<{ [key: string]: string | number }>) => {
           this.rowData = data;
         },
       });
@@ -57,8 +70,26 @@ export class AppComponent {
     this.gridApi.deselectAll();
   }
 
+  SortByMakeModel(sort: 'asc' | 'desc') {
+    this.gridColumnApi.applyColumnState({
+      state: [
+        { colId: 'make', sort },
+        { colId: 'model', sort },
+      ],
+      defaultState: { sort: null },
+    });
+  }
+
+  extractCSV() {
+    this.gridApi.exportDataAsCsv();
+  }
+
+  selectAllRows() {
+    this.gridApi.selectAll();
+  }
+
   ngOnDestroy() {
-    this.destroySubject.next();
-    this.destroySubject.complete();
+    // this.destroySubject.next();
+    // this.destroySubject.complete();
   }
 }
