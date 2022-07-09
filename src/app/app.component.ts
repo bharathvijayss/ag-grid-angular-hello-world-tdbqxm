@@ -34,9 +34,13 @@ export class AppComponent {
         field: 'make',
         headerName: 'Vehicle Make',
         filter: 'agTextColumnFilter',
+        checkboxSelection: true,
+        headerCheckboxSelection: true,
+        headerCheckboxSelectionFilteredOnly: true,
       },
       { colId: 'model', field: 'model', headerName: 'Vehicle Model' },
       {
+        colId: 'price',
         field: 'price',
         headerName: 'Onroad Price',
         filter: 'agNumberColumnFilter',
@@ -45,6 +49,13 @@ export class AppComponent {
     this.defaultColDef = {
       sortable: true,
     };
+  }
+
+  onRowSelectionChange() {
+    this.cellClickMessage = this.gridApi
+      .getSelectedRows()
+      .map((data) => data.make + data.model)
+      .join(', ');
   }
 
   onGridReady(params: GridReadyEvent) {
@@ -91,5 +102,11 @@ export class AppComponent {
   ngOnDestroy() {
     // this.destroySubject.next();
     // this.destroySubject.complete();
+  }
+
+  togglePrice() {
+    const priceColumn = this.gridColumnApi.getColumn('price');
+    this.gridColumnApi.setColumnVisible('price', !priceColumn.isVisible());
+    this.gridApi.sizeColumnsToFit();
   }
 }

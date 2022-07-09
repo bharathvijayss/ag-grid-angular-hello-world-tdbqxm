@@ -8,6 +8,7 @@
   [defaultColDef]="defaultColDef"
   (gridReady)="onGridReady($event)"
   (cellClicked)="onCellClicked($event)"
+  (selectionChanged)="onRowSelectionChange()"
 >
 </ag-grid-angular>
 
@@ -26,6 +27,8 @@
 <button type="button" (click)="SortByMakeModel('desc')">
   Make and Model Descending
 </button>
+|
+<button type="button" (click)="togglePrice()">Toggle Price Column</button>
 
 <div *ngIf="cellClickMessage" style="margin-top: 20px;">
   {{ cellClickMessage }}
