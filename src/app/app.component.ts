@@ -10,6 +10,7 @@ import {
 } from 'ag-grid-community';
 import {
   ICellRendererParams,
+  RowNode,
   ValueGetterParams,
 } from 'ag-grid-community/dist/lib/main';
 import { Subject, interval } from 'rxjs';
@@ -76,20 +77,25 @@ export class AppComponent {
     });
   }
 
-  updateData() {
-    this.gridApi.forEachNodeAfterFilterAndSort((rowValue) => {
-      console.log(rowValue);
+  deleteData() {
+    const dataTobeDeleted = this.gridApi.getSelectedRows();
+    this.gridApi.applyTransaction({
+      remove: dataTobeDeleted,
     });
-    // interval(500).pipe(
-    //   takeUntil(this.destroySubject),
-    //   tap((data) => {
-    //     const updatedData = [];
+  }
 
-    //   })
-    // );
-    // this.gridApi.applyTransaction({
-    //   update: [],
-    // });
+  updateData() {
+    const itemsToUpdate: any[] = [];
+    this.gridApi.forEachNodeAfterFilterAndSort(function (rowNode, index) {
+      // only do first 2
+      // if (index >= 2) {
+      //   return;
+      // }
+      const data = rowNode.data;
+      data.price = Math.floor(Math.random() * 20000 + 20000);
+      itemsToUpdate.push(data);
+    });
+    const res = this.gridApi.applyTransaction({ update: itemsToUpdate });
   }
 
   onGridReady(params: GridReadyEvent) {
