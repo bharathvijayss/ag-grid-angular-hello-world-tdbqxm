@@ -6,13 +6,23 @@
   [animateRows]="true"
   [rowSelection]="'multiple'"
   [defaultColDef]="defaultColDef"
+  [columnTypes]="columnTypes"
   (gridReady)="onGridReady($event)"
   (cellClicked)="onCellClicked($event)"
   (selectionChanged)="onRowSelectionChange()"
+  [suppressDragLeaveHidesColumns]="'true'"
 >
 </ag-grid-angular>
 
-{{ check }}
+<div
+  style="margin-bottom: 10px; padding: 10px 10px 0 10px; border: 1px solid grey"
+>
+  <input type="number" style="margin-bottom: 10px;" [formControl]="indexPosition" /> <br />
+  <button type="button" (click)="movePrice()">Move Price Column</button> |
+  <button type="button" (click)="movePriceandModel()">
+    Move Price and Model Columns
+  </button>
+</div>
 
 <button type="button" (click)="deleteData()">Delete Selection</button>
 |

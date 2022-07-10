@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import {
   CellClickedEvent,
@@ -30,8 +31,19 @@ export class AppComponent {
   gridApi!: GridApi;
   gridColumnApi!: ColumnApi;
   cellClickMessage: string = '';
+  columnTypes: { [key: string]: ColDef };
+  indexPosition: FormControl = new FormControl();
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {
+    this.columnTypes = {
+      nonEditable: {
+        editable: false,
+      },
+      textFilter: {
+        filter: 'agTextColumnFilter',
+      },
+    };
+  }
 
   ngOnInit(): void {
     this.columnDefs = [
@@ -39,10 +51,12 @@ export class AppComponent {
         colId: 'make',
         field: 'make',
         headerName: 'Vehicle Make',
-        filter: 'agTextColumnFilter',
         checkboxSelection: true,
         headerCheckboxSelection: true,
         headerCheckboxSelectionFilteredOnly: true,
+        type: 'textFilter',
+        width: 300,
+        // lockPosition: true,
       },
       {
         colId: 'model',
@@ -50,6 +64,9 @@ export class AppComponent {
         headerName: 'Vehicle Model',
         cellRenderer: (params: ICellRendererParams) =>
           `<b>${params.data.model}</b>`,
+        type: ['nonEditable', 'textFilter'],
+        suppressMovable: true,
+        pinned: 'right',
       },
       {
         colId: 'price',
@@ -61,7 +78,20 @@ export class AppComponent {
     ];
     this.defaultColDef = {
       sortable: true,
+      editable: true,
+      resizable: true,
     };
+  }
+
+  movePrice() {
+    this.gridColumnApi.moveColumn('price', this.indexPosition.value);
+  }
+
+  movePriceandModel() {
+    this.gridColumnApi.moveColumns(
+      ['model', 'price'],
+      this.indexPosition.value
+    );
   }
 
   onRowSelectionChange() {
