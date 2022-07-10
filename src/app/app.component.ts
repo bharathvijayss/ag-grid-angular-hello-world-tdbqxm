@@ -8,7 +8,12 @@ import {
   GridApi,
   GridReadyEvent,
 } from 'ag-grid-community';
-import { Subject } from 'rxjs';
+import {
+  ICellRendererParams,
+  ValueGetterParams,
+} from 'ag-grid-community/dist/lib/main';
+import { Subject, interval } from 'rxjs';
+import { map, takeUntil, tap } from 'rxjs/operators';
 // import { GridDataService } from '../services/grid-data.service';
 
 @Component({
@@ -20,7 +25,7 @@ export class AppComponent {
   columnDefs!: ColDef[];
   rowData!: any[];
   defaultColDef!: ColDef;
-  // destroySubject: Subject<void> = new Subject<void>();
+  destroySubject: Subject<void> = new Subject<void>();
   gridApi!: GridApi;
   gridColumnApi!: ColumnApi;
   cellClickMessage: string = '';
@@ -38,12 +43,19 @@ export class AppComponent {
         headerCheckboxSelection: true,
         headerCheckboxSelectionFilteredOnly: true,
       },
-      { colId: 'model', field: 'model', headerName: 'Vehicle Model' },
+      {
+        colId: 'model',
+        field: 'model',
+        headerName: 'Vehicle Model',
+        cellRenderer: (params: ICellRendererParams) =>
+          `<b>${params.data.model}</b>`,
+      },
       {
         colId: 'price',
         field: 'price',
         headerName: 'Onroad Price',
         filter: 'agNumberColumnFilter',
+        valueGetter: (params: ValueGetterParams) => 'Rs. ' + params.data.price,
       },
     ];
     this.defaultColDef = {
@@ -58,6 +70,28 @@ export class AppComponent {
       .join(', ');
   }
 
+  addNewData() {
+    this.gridApi.applyTransaction({
+      add: [{ make: 'bv', model: 'ss', price: 19091999 }],
+    });
+  }
+
+  updateData() {
+    this.gridApi.forEachNodeAfterFilterAndSort((rowValue) => {
+      console.log(rowValue);
+    });
+    // interval(500).pipe(
+    //   takeUntil(this.destroySubject),
+    //   tap((data) => {
+    //     const updatedData = [];
+
+    //   })
+    // );
+    // this.gridApi.applyTransaction({
+    //   update: [],
+    // });
+  }
+
   onGridReady(params: GridReadyEvent) {
     this.gridApi = params.api;
     this.gridColumnApi = params.columnApi;
@@ -68,6 +102,7 @@ export class AppComponent {
       .subscribe({
         next: (data: Array<{ [key: string]: string | number }>) => {
           this.rowData = data;
+          // this.gridApi.setRowData(this.rowData);
         },
       });
     this.gridApi.sizeColumnsToFit();
@@ -100,8 +135,8 @@ export class AppComponent {
   }
 
   ngOnDestroy() {
-    // this.destroySubject.next();
-    // this.destroySubject.complete();
+    this.destroySubject.next();
+    this.destroySubject.complete();
   }
 
   togglePrice() {
