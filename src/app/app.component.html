@@ -1,3 +1,11 @@
+<input
+  type="search"
+  [formControl]="searchBox"
+  placeholder="Enter the Search Query here"
+  style="width: 100%; height: 30px;"
+/>
+
+<!-- [quickFilterText]="searchBox.valueChanges | async" -->
 <ag-grid-angular
   style="width: 100%; height: 300px; margin: 30px 0"
   class="ag-theme-alpine"
@@ -17,7 +25,12 @@
 <div
   style="margin-bottom: 10px; padding: 10px 10px 0 10px; border: 1px solid grey"
 >
-  <input type="number" style="margin-bottom: 10px;" [formControl]="indexPosition" /> <br />
+  <input
+    type="number"
+    style="margin-bottom: 10px;"
+    [formControl]="indexPosition"
+  />
+  <br />
   <button type="button" (click)="movePrice()">Move Price Column</button> |
   <button type="button" (click)="movePriceandModel()">
     Move Price and Model Columns

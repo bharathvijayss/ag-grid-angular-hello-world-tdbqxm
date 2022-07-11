@@ -10,6 +10,7 @@ import {
   GridReadyEvent,
 } from 'ag-grid-community';
 import {
+  GetQuickFilterTextParams,
   ICellRendererParams,
   RowNode,
   ValueGetterParams,
@@ -33,6 +34,7 @@ export class AppComponent {
   cellClickMessage: string = '';
   columnTypes: { [key: string]: ColDef };
   indexPosition: FormControl = new FormControl();
+  searchBox: FormControl = new FormControl('');
 
   constructor(private http: HttpClient) {
     this.columnTypes = {
@@ -64,6 +66,9 @@ export class AppComponent {
         headerName: 'Vehicle Model',
         cellRenderer: (params: ICellRendererParams) =>
           `<b>${params.data.model}</b>`,
+        getQuickFilterText: (params: GetQuickFilterTextParams) => {
+          return params.data.model;
+        },
         type: ['nonEditable', 'textFilter'],
         suppressMovable: true,
         pinned: 'right',
@@ -73,7 +78,10 @@ export class AppComponent {
         field: 'price',
         headerName: 'Onroad Price',
         filter: 'agNumberColumnFilter',
-        valueGetter: (params: ValueGetterParams) => 'Rs. ' + params.data.price,
+        filterParams: {
+          buttons: ['apply', 'cancel', 'clear', 'reset'],
+        },
+        // valueGetter: (params: ValueGetterParams) => 'Rs. ' + params.data.price,
       },
     ];
     this.defaultColDef = {
@@ -81,6 +89,11 @@ export class AppComponent {
       editable: true,
       resizable: true,
     };
+    this.searchBox.valueChanges
+      .pipe(takeUntil(this.destroySubject))
+      .subscribe((data) => {
+        this.gridApi.setQuickFilter(data);
+      });
   }
 
   movePrice() {
