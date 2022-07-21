@@ -19,6 +19,9 @@
   (cellClicked)="onCellClicked($event)"
   (selectionChanged)="onRowSelectionChange()"
   [suppressDragLeaveHidesColumns]="'true'"
+  [sortingOrder]="['asc', null, 'desc']"
+  multiSortKey="ctrl"
+  rowDragManaged="true"
 >
 </ag-grid-angular>
 
@@ -37,6 +40,8 @@
   </button>
 </div>
 
+<button type="button" (click)="supressRowDrag()">Suppress Row Drag</button>
+|
 <button type="button" (click)="deleteData()">Delete Selection</button>
 |
 <button type="button" (click)="updateData()">Update Data</button>

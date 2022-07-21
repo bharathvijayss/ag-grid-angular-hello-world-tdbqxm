@@ -27,6 +27,7 @@ import { map, takeUntil, tap } from 'rxjs/operators';
 export class AppComponent {
   columnDefs!: ColDef[];
   rowData!: any[];
+  rowDraggable: boolean = false;
   defaultColDef!: ColDef;
   destroySubject: Subject<void> = new Subject<void>();
   gridApi!: GridApi;
@@ -61,6 +62,9 @@ export class AppComponent {
           filterOptions: ['contains', 'startsWith'],
         },
         width: 300,
+        suppressMenu: true,
+        floatingFilter: true,
+        rowDrag: true,
         // lockPosition: true,
       },
       {
@@ -128,6 +132,11 @@ export class AppComponent {
     this.gridApi.applyTransaction({
       remove: dataTobeDeleted,
     });
+  }
+
+  supressRowDrag() {
+    this.rowDraggable = !this.rowDraggable;
+    this.gridApi.setSuppressRowDrag(this.rowDraggable);
   }
 
   updateData() {
