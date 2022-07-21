@@ -57,6 +57,9 @@ export class AppComponent {
         headerCheckboxSelection: true,
         headerCheckboxSelectionFilteredOnly: true,
         type: 'textFilter',
+        filterParams: {
+          filterOptions: ['contains', 'startsWith'],
+        },
         width: 300,
         // lockPosition: true,
       },
