@@ -65,6 +65,10 @@ export class AppComponent {
         suppressMenu: true,
         floatingFilter: true,
         rowDrag: true,
+        // rowSpan: ({ data }) => {
+        //   return 2;
+        // },
+        cellClass: 'bg-green',
         // lockPosition: true,
       },
       {
@@ -87,6 +91,10 @@ export class AppComponent {
         filter: 'agNumberColumnFilter',
         filterParams: {
           buttons: ['apply', 'cancel', 'clear', 'reset'],
+        },
+        cellClassRules: {
+          'bg-red': ({ data }) => data.price < 35000,
+          'bg-blue': ({ data }) => data.price > 35000,
         },
         // valueGetter: (params: ValueGetterParams) => 'Rs. ' + params.data.price,
       },

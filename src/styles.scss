@@ -1,4 +1,16 @@
 /* Add application styles & imports to this file! */
 
-@import "ag-grid-community/dist/styles/ag-grid.css";
-@import "ag-grid-community/dist/styles/ag-theme-alpine.css";
+@import 'ag-grid-community/dist/styles/ag-grid.css';
+@import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
+
+.bg-red {
+  background-color: red;
+}
+
+.bg-blue {
+  background-color: skyblue;
+}
+
+.bg-green {
+  background-color: lightgreen;
+}
