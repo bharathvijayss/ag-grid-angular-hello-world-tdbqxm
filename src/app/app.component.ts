@@ -54,6 +54,14 @@ export class AppComponent {
     'text-white': ({ data }) => data.price < 45000,
   };
 
+  // cellValueChanged(event) {
+  //   console.log(event.newValue);
+  // }
+
+  rowValueChanged(event) {
+    console.log(event);
+  }
+
   constructor(private http: HttpClient) {
     this.columnTypes = {
       nonEditable: {
@@ -82,11 +90,35 @@ export class AppComponent {
         suppressMenu: true,
         floatingFilter: true,
         rowDrag: true,
+        valueParser: ({ newValue, oldValue }) => {
+          if (isNaN(Number(newValue))) {
+            return newValue;
+          }
+          return oldValue;
+        },
         // rowSpan: ({ data }) => {
         //   return 2;
         // },
         // cellClass: 'bg-green',
         // lockPosition: true,
+        // cellEditor: 'agSelectCellEditor',
+        // cellEditorParams: { values: ['Ford', 'Porsche', 'Hyundai', 'Toyota'] },
+      },
+      {
+        valueGetter: ({ data }) => {
+          return (
+            data.price.toString().substr(0, 3) + '-' + data.make.substr(0, 3)
+          );
+        },
+        valueSetter: ({ data, newValue }) => {
+          const split = newValue.split('-');
+          if (split.length === 2) {
+            data.price = Number(split[0]) * 1000 + 999;
+            data.make = split[1] + data.make.substr(3);
+          } else {
+            return false;
+          }
+        },
       },
       {
         colId: 'model',
@@ -124,8 +156,14 @@ export class AppComponent {
     ];
     this.defaultColDef = {
       sortable: true,
-      editable: true,
+      // editable: true,
       resizable: true,
+      editable: ({ data }) => {
+        if (data.price > 35000) {
+          return true;
+        }
+        return false;
+      },
     };
     this.searchBox.valueChanges
       .pipe(takeUntil(this.destroySubject))

@@ -9,7 +9,9 @@
 <!-- suppressRowTransform="true" -->
 <!-- [rowClass]="'row-border'"
 [rowStyle]="rowStyleObject" 
-[getRowClass]="getRowClass" -->
+[getRowClass]="getRowClass"
+[singleClickEdit]="'true'" 
+(cellValueChanged)="cellValueChanged($event)" -->
 <ag-grid-angular
   style="width: 100%; height: 300px; margin: 30px 0"
   class="ag-theme-alpine ag-theme-acmecorp"
@@ -28,6 +30,8 @@
   rowDragManaged="true"
   rowHeight="30"
   [rowClassRules]="getRowClassRules"
+  [editType]="'fullRow'"
+  (rowValueChanged)="rowValueChanged($event)"
 >
 </ag-grid-angular>
 
