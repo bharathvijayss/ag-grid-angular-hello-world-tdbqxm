@@ -14,3 +14,33 @@
 .bg-green {
   background-color: lightgreen;
 }
+
+.row-border {
+  background-color: bisque !important;
+  margin: 4px 0;
+}
+
+.text-green {
+  color: green !important;
+}
+
+.text-white {
+  color: violet !important;
+}
+
+.ag-row-hover {
+  background-color: blanchedalmond !important;
+}
+
+.ag-theme-acmecorp {
+  --ag-odd-row-background-color: #aaa;
+}
+
+/* set the background color of many elements across the grid */
+.ag-theme-alpine {
+  --ag-background-color: #ddd;
+}
+/* change the font style of a single UI component */
+.ag-theme-alpine .ag-header-cell-label {
+  font-style: italic;
+}

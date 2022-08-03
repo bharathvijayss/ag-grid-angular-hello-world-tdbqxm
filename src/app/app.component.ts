@@ -37,6 +37,23 @@ export class AppComponent {
   indexPosition: FormControl = new FormControl();
   searchBox: FormControl = new FormControl('');
 
+  rowStyleObject = {
+    color: 'orange',
+  };
+
+  getRowClass({ data }) {
+    if (data.price > 45000) {
+      return 'text-green';
+    } else {
+      return 'text-white';
+    }
+  }
+
+  getRowClassRules = {
+    'text-green': ({ data }) => data.price > 45000,
+    'text-white': ({ data }) => data.price < 45000,
+  };
+
   constructor(private http: HttpClient) {
     this.columnTypes = {
       nonEditable: {
@@ -68,7 +85,7 @@ export class AppComponent {
         // rowSpan: ({ data }) => {
         //   return 2;
         // },
-        cellClass: 'bg-green',
+        // cellClass: 'bg-green',
         // lockPosition: true,
       },
       {
@@ -83,6 +100,12 @@ export class AppComponent {
         type: ['nonEditable', 'textFilter'],
         suppressMovable: true,
         pinned: 'right',
+        // cellStyle: ({ value }) =>
+        //   value === 'Boxter'
+        //     ? {
+        //         color: 'red',
+        //       }
+        //     : { 'background-color': 'green' },
       },
       {
         colId: 'price',
@@ -92,10 +115,10 @@ export class AppComponent {
         filterParams: {
           buttons: ['apply', 'cancel', 'clear', 'reset'],
         },
-        cellClassRules: {
-          'bg-red': ({ data }) => data.price < 35000,
-          'bg-blue': ({ data }) => data.price > 35000,
-        },
+        // cellClassRules: {
+        //   'bg-red': ({ data }) => data.price < 35000,
+        //   'bg-blue': ({ data }) => data.price > 35000,
+        // },
         // valueGetter: (params: ValueGetterParams) => 'Rs. ' + params.data.price,
       },
     ];

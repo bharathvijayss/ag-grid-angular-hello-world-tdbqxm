@@ -7,9 +7,12 @@
 
 <!-- [quickFilterText]="searchBox.valueChanges | async" -->
 <!-- suppressRowTransform="true" -->
+<!-- [rowClass]="'row-border'"
+[rowStyle]="rowStyleObject" 
+[getRowClass]="getRowClass" -->
 <ag-grid-angular
   style="width: 100%; height: 300px; margin: 30px 0"
-  class="ag-theme-alpine"
+  class="ag-theme-alpine ag-theme-acmecorp"
   [rowData]="rowData"
   [columnDefs]="columnDefs"
   [animateRows]="true"
@@ -23,7 +26,8 @@
   [sortingOrder]="['asc', null, 'desc']"
   multiSortKey="ctrl"
   rowDragManaged="true"
-  rowHeight='30'
+  rowHeight="30"
+  [rowClassRules]="getRowClassRules"
 >
 </ag-grid-angular>
 
